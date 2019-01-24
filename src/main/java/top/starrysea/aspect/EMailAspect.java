@@ -17,6 +17,7 @@ import top.starrysea.service.IMailService;
 
 import static top.starrysea.common.ResultKey.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,8 +42,11 @@ public class EMailAspect {
 
 	@AfterReturning(value = "execution(* top.starrysea.service.impl.OrderServiceImpl.addOrderService(..))", returning = "serviceResult")
 	public void sendOrderEmail(ServiceResult serviceResult) {
-		if (serviceResult.isSuccessed())
-			orderMailService.sendMailService((List<OrderDetail>) serviceResult.getResult(LIST_1));
+		List<OrderDetail> orderDetails = new ArrayList<>();
+		if (serviceResult.isSuccessed()) {
+			orderDetails = serviceResult.getResult(LIST_1);
+		}
+		orderMailService.sendMailService(orderDetails);
 	}
 
 	@AfterReturning(value = "execution(* top.starrysea.service.impl.OrderServiceImpl.modifyOrderService(..))", returning = "serviceResult")
